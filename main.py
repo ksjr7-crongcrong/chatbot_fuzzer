@@ -33,7 +33,10 @@ class ChatbotFuzzer:
             category, answer = tagged_answer[i]
             exist_privacy = match(category, answer)
             if exist_privacy:
-                result[category] = (q_list[i], answer)
+                if category in result:
+                    result[category].append((q_list[i], answer))
+                else:
+                    result[category] = [(q_list[i], answer)]
         return result
 
     def fuzz(self) -> dict:
