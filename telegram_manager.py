@@ -12,13 +12,7 @@ class TelegramCommunicator(AsyncChatbotCommunicator):
         telegram['BOTNAME'] = bot_info['name']
         
     async def send_questions(self, q_list):
-        bot = TelegramClient('session', telegram['API_ID'], telegram['API_HASH'])
-        bot.connect()
-
-        if not bot.is_user_authorized():
-            bot.sign_in(telegram['PHONE'], telegram['AUTHCODE'])
-
-        async with bot as client:
+        async with TelegramClient('session', telegram['API_ID'], telegram['API_HASH']) as client:
             info_msg = await client.send_message(telegram['BOTNAME'], "msg for get current idx")
             self.start_idx = info_msg.id
             self.bot_id = info_msg.to_id.user_id
@@ -29,12 +23,7 @@ class TelegramCommunicator(AsyncChatbotCommunicator):
         
 
     async def receive_replys(self, q_len):
-        bot = TelegramClient('session', telegram['API_ID'], telegram['API_HASH'])
-        bot.connect()
-
-        if not bot.is_user_authorized():
-            bot.sign_in(telegram['PHONE'], telegram['AUTHCODE'])
-        async with bot as client:
+        async with TelegramClient('session', telegram['API_ID'], telegram['API_HASH']) as client:
             start = self.start_idx + 1 # also remove reply of msg for get idx
             end = start + (q_len * 2) + 10 # give margin to solve unreplyed messages problem
             replys = await client.get_messages(telegram['BOTNAME'], reverse = True, max_id = end, min_id=start)
