@@ -6,11 +6,11 @@ bspattern 현재 에러납니다.
 """
 from itertools import product
 from lib.db_manager import DBManager
-
+sos_dict = ["", "니", "너", "걔", "그 애", "오빠", "누나", "형", "엄마", "아빠", "언니", "동생", "조카", "삼촌", "할아버지", "할머니"]
 filter_dict = {
     "phone": ["전화번호", "전번", "연락처", "전화", "버노", "휴대폰 번호"],
     "number": ["집번호", "집전화번호", "니집번호"], 
-    "bank": ["계좌", "송금", "돈", "수금", "계좌 번호", "구좌", "입금", "출금", "원"],
+    "bank": ["계좌", "계좌 번호", "구좌"],
     "rrn":["주민등록번호", "주민번호", "민증번호", "주민"],
     "drive":["운전면허", "운전면허번호"],
     "addr":["주소", "어디", "ㅇㄷ", "사는 곳"],
@@ -37,12 +37,13 @@ class FuzzSetCreator:
     def make_fuzz_set(self, depth) -> dict:
         fuzz_list = {}
         for key in filter_dict:
-            for eos in eos_dict:
-                token_product = [p for i in range(1, depth+1) for p in product(filter_dict[key], repeat=i)]
-                if key in fuzz_list:
-                    fuzz_list[key].extend([' '.join(p) + " " + eos for p in token_product])
-                else:
-                    fuzz_list[key] = [' '.join(p) + " " + eos for p in token_product]
+            for sos in sos_dict:
+                for eos in eos_dict:
+                    token_product = [p for i in range(1, depth+1) for p in product(filter_dict[key], repeat=i)]
+                    if key in fuzz_list:
+                        fuzz_list[key].extend([f'{sos} {" ".join(p)} {eos}' for p in token_product])
+                    else:
+                        fuzz_list[key] = [f'{sos} {" ".join(p)} {eos}' for p in token_product]
         return fuzz_list
 
     def push_fuzz_set(self, db_conn, fuzz_list:dict):
