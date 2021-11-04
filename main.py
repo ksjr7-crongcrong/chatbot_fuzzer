@@ -27,19 +27,21 @@ class ChatbotFuzzer:
     def add_tag(self, category_iter, chatbot_response):
         return list(zip(category_iter, chatbot_response))
 
-    def analyze_answer(self, tagged_answer) -> dict:
+    def analyze_answer(self, q_list, tagged_answer) -> dict:
         result = {}
-        for category, answer in tagged_answer:
+        for i in range(len(tagged_answer)):
+            category, answer = tagged_answer[i]
             exist_privacy = match(category, answer)
             if exist_privacy:
-                result[category] = answer
+                result[category] = (q_list[i], answer)
         return result
 
     def fuzz(self) -> dict:
-        _, chatbot_response = self.chatbot_communicator.talk(self.get_fuzz_set())
+        q_list = self.get_fuzz_set()
+        _, chatbot_response = self.chatbot_communicator.talk(q_list)
         fuzz_set_category_iter = self.get_category_iter()
         tagged_answer = self.add_tag(fuzz_set_category_iter, chatbot_response)
-        result = self.analyze_answer(tagged_answer)
+        result = self.analyze_answer(q_list, tagged_answer)
         return result
 
 if __name__ == "__main__":
