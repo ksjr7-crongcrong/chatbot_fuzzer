@@ -15,10 +15,70 @@
     <body>
         <section>
             <div class="container">
-                <form>
+                <form method="post" action="{{ url_for('auto_check') }}" onsubmit="return requireCheck();">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="API 주소" id="api_url">
-                        <button class="btn btn-outline-secondary" type="button" onclick="apiValidCheck()">Button</button>
+                        <input type="text" class="form-control" placeholder="API 주소" name="api_url">
+                        <button class="btn btn-outline-secondary" type="button" onclick="apiValidCheck()">URL 확인</button>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="rnn" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            주민등록번호
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="passport" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            여권번호
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="drive" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            운전면허번호
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="health" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            건강보험번호
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="credit" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            신용카드
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="bank" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            계좌번호
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="phone" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            휴대전화번호
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="number" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            집 전화번호
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="email" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            이메일
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="category" value="addr" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            주소
+                        </label>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
