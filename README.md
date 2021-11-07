@@ -1,41 +1,41 @@
-# 구성도
+[contributors-shield]: https://img.shields.io/github/contributors/ksjr7-crongcrong/chatbot_fuzzer?style=flat-square
+[contributors-url]: https://github.com/ksjr7-crongcrong/chatbot_fuzzer/graphs/contributors
+[license-shield]: https://img.shields.io/github/license/ksjr7-crongcrong/chatbot_fuzzer.svg?style=flat-square
+[license-url]: https://github.com/ksjr7-crongcrong/chatbot_fuzzer/blob/main/LICENSE
 
-추가예정
+[![Contributors][contributors-shield]][contributors-url]
+[![MIT License][license-shield]][license-url]
 
-## 다양한 챗봇 지원 고려
+## Service Flow
 
-### chatbot api의 소통 방법 고려하여 추상클래스 설계
-챗 봇에게 메시지를 보내고 답변을 받아오는 부분 추상화
-동기, 비동기 방식 고려 두가지 추상 클래스로 나누어 설계
-- AsyncChatbotCommunicator
-- SyncChatbotCommunicator
+### 시작 화면
 
-## config
-chatbot 별로 config를 저장할 수 있게 설계
+client에게 다음 항목을 요청합니다.
+- 챗봇과 소통할 수 있는 API 주소
+    - 유효성 검사는 API의 conf endpoint에 요청, talk endpoint를 통해 총 2회 검증
 
-### TELEGRAM
-- API_ID, API_HASH : Telethon
-- BOTNAME : Fuzzing Target
-- INTERVAL : msg send interval
+client에게 검사에 대해 customizing을 제공합니다.
+- 검사받을 카테고리 선택
+    - 카테고리를 선택할 때 마다 JS를 활용하여 동적으로 총 예상 시간을 알려줍니다.
+- 결과파일 암호화 선택
+    - 서버에 챗봇의 응답결과가 남지 않음을 공지
+    - 암호화를 하겠다고 할 시 공개키를 요청
 
-## qna_parser
-- add_tag : 질문 유형에 대한 tag를 해당 질문의 답변에 붙이는 루틴
+### 점검 진행화면
+
+검사 시간이 굉장히 길기 때문에 카테고리 별로 단위를 쪼개어 검사를 진행
+async, await 문법을 활용하여 JS를 통해 카테고리마다 검사 완료 여부 표시
+
+### 결과 화면 
+
+중요 지표를 바 그래프 형태로 제공
+노출된 개인정보와 해당 답변을 유도한 질문 데이터 셋을 csv 형태로 다운받을 수 있도록 제공
+
+## 아키텍쳐 구조
+
+Flask Web Server + gunicorn(worker:gevent)
+- Non-Blocking + 비동기 방식으로 동작
 
 ## How to USE
 
-### require
-```bash
-pip install -r requirements.txt
-```
-
-이 후 chatbot.ini 파일에 사전정보를 넣어줍니다.
-AUTHCODE는 안넣어도도 됩니다 ( 실행 시 요청할 겁니다. )
-
-### run
-```
-python main.py
-```
-
-### QnA
-- Q: 너무 느려요
-    - A: INTERVAL을 줄이세요, 다만 너무 짧은 INTERVAL은 챗봇 측이 사용자를 ban할 수 있습니다.
+추가 예정
