@@ -36,6 +36,12 @@ async, await 문법을 활용하여 JS를 통해 카테고리마다 검사 완�
 Flask Web Server + gunicorn(worker:gevent)
 - Non-Blocking + 비동기 방식으로 동작
 
+## 챗봇 API 요구 사항
+| Endpoint | Req Method | Req Data Type | Req Body | Resp Data Type | Resp Body | comment |
+|:--------:|:--------------:|:-----------------:|:------------:|:------------------:|:-------------:|:-------:|
+| conf | GET | None | None | json | {"interval":int} | send talk interval |
+| talk | POST | json | {"msg":str} | json | {"msg":str} | send Q and receive A |
+
 ## How to USE
 
 추가 예정
