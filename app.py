@@ -9,6 +9,7 @@ from datetime import datetime
 import requests as req
 import uuid
 from lib.data_injector import DataInjector
+from functools import reduce
 
 server = Flask(__name__)
 server.secret_key = "7e733a6a61b057024842ca1825409c51a2f80100"
@@ -66,7 +67,7 @@ def check(category):
     """
     result = controller.check(category)
     if result['status'] == "success":
-        resultQ[session['uid']+category] = result
+        resultQ[session['uid']+category] = result['result']
     return {"status":result['status']}
 
 @server.route('/show_result', methods=['GET'])
@@ -74,18 +75,23 @@ def show_result():
     """
     결과를 보여주는 페이지
     """
+    privacy_level = {"high":["rrn", "passport", "drive", "bank", "credit", "health"], "medium":["addr", "phone", "number", "email"], "low":[]}
     if "check_list" not in session:
         return {"total queryed":0, "result": "Non check executed"}
     check_list = session['check_list']
     total_len = controller.get_query_len_by_list(check_list)
     full_result = {}
+    detected_count = {}
     for category in check_list:
         key = session['uid']+category
         if key in resultQ:
-            result = resultQ[key]
+            count, result = resultQ[key]
             del resultQ[key]
             full_result[category] = result
-    return {"total queryed": total_len, "result": full_result}
+            detected_count[category] = count
+    high_level_count = reduce(lambda x, y: x + y, [detected_count[c] for c in privacy_level["high"] if c in detected_count]+[0,0])
+    medium_level_count = reduce(lambda x, y: x + y, [detected_count[c] for c in privacy_level["medium"] if c in detected_count]+[0,0])
+    return {"total queryed": total_len, "result": full_result, "count": detected_count, "high": high_level_count, "medium": medium_level_count}
 
 @server.route('/api_valid_check', methods=['POST'])
 def api_valid_check():

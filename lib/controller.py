@@ -35,7 +35,7 @@ class Controller:
             raw_result = self.__data_injector.fuzz(q_list)
             # Output : [(q, a), ... ]
             result = self.analyzer.privacy_check(category, raw_result)
-            return {'status': 'success', 'result': result}
+            return {'status': 'success', 'result': (len(result), result)}
         return {'status': 'fail'}
 
     @property
