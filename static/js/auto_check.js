@@ -7,6 +7,14 @@ document.addEventListener('readystatechange', event => {
 
     // When window loaded ( external resources are loaded too- `css`,`src`, etc...)
     if (event.target.readyState === "complete") {
+        
+        var bar = new ldBar(".myBar", {
+            "stroke": '#cee5d5',
+            "stroke-width": 10,
+            "preset": "circle",
+            "value": 0
+        });
+
         check_str = document.getElementById("checkToken").value;
         check_list = check_str.split("|");
         (async function loops() {
@@ -15,6 +23,7 @@ document.addEventListener('readystatechange', event => {
                     .then((response) => response.json())
                     .then((data) => {
                         if (data.status == "success") {
+                            bar.set(100 * (idx + 1) / check_list.length);
                             document.querySelector('div[id="result"][name$=' + item + ']').innerText = "done";
                         }
                     });

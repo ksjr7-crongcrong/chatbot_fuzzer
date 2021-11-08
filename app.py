@@ -91,7 +91,22 @@ def show_result():
             detected_count[category] = count
     high_level_count = reduce(lambda x, y: x + y, [detected_count[c] for c in privacy_level["high"] if c in detected_count]+[0,0])
     medium_level_count = reduce(lambda x, y: x + y, [detected_count[c] for c in privacy_level["medium"] if c in detected_count]+[0,0])
-    return {"total queryed": total_len, "result": full_result, "count": detected_count, "high": high_level_count, "medium": medium_level_count}
+    full_result_list = []
+    for c in full_result:
+        for row in full_result[c]:
+            q, a = row
+            level = "주의"
+            if c in privacy_level["high"]:
+                level = "위험"
+            full_result_list.append({"category":c, "q":q, "a":a, "level":level})
+    top_result = full_result_list[:5]
+    return render_template('charts.html',
+        check_list = "|".join(check_list),
+        value_list = "|".join([str(detected_count[c]) for c in check_list if c in detected_count]),
+        level_count = f'{high_level_count}|{medium_level_count}',
+        top_result = top_result
+    )
+    # return {"total queryed": total_len, "result": full_result, "count": detected_count, "high": high_level_count, "medium": medium_level_count}
 
 @server.route('/api_valid_check', methods=['POST'])
 def api_valid_check():
@@ -147,6 +162,7 @@ def api_valid_check():
 
 @server.route('/flag', methods=['GET'])
 def flag():
+    return render_template('charts.html')
     return {"flag": "This_SERVICE_is_NOT_CTF_Prob!!!!!!!!!!!"}
 
 
