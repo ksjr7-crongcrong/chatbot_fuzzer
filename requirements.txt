@@ -1,2 +1,5 @@
+wheel
+gunicorn
 flask
 pytz
+gevent

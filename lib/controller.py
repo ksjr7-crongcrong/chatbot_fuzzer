@@ -13,8 +13,11 @@ class Controller:
     def ready_db(self):
         self.q_maker.ready()
 
-    def get_query_list(self, category: str):
-        stmt = f"SELECT msg FROM questions WHERE category='{category}' order by id"
+    def get_query_list(self, category: str, light: bool = False):
+        if light:
+            stmt = f"SELECT msg FROM questions WHERE category='{category}' order by id limit 10"
+        else:
+            stmt = f"SELECT msg FROM questions WHERE category='{category}' order by id"
         q_list = self.db_manager.query(stmt)
         return q_list
 
@@ -26,7 +29,7 @@ class Controller:
         return total_len
 
     def check(self, category: str):
-        q_list = self.get_query_list(category)
+        q_list = self.get_query_list(category, light=True)
         if self.__data_injector is not None:
             # Output : [(q, a), ... ]
             raw_result = self.__data_injector.fuzz(q_list)

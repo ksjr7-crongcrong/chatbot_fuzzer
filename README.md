@@ -44,4 +44,7 @@ Flask Web Server + gunicorn(worker:gevent)
 
 ## How to USE
 
-추가 예정
+```bash
+pip install -r requirements.txt
+gunicorn app:server -k gevent
+```
