@@ -6,7 +6,6 @@ from pytz import timezone
 from datetime import datetime
 import requests as req
 
-
 server = Flask(__name__)
 server.secret_key = "7e733a6a61b057024842ca1825409c51a2f80100"
 chatbot = None
@@ -47,8 +46,16 @@ def auto_check():
     시작 화면에서 넘겨받은 인자를 통해 검사를 진행합니다.
     """
     api_url = request.form.get('api_url')
-    category = request.form.getlist('category')
-    return {"api_url": api_url, "category": category}
+    check_list = request.form.getlist('category')
+    check_str = "|".join(check_list)
+    return render_template('auto_check.html', check_list=check_list, check_str=check_str)
+
+@server.route('/check/<category>', methods=['GET'])
+def check(category):
+    """
+    category에 해당하는 검사를 진행 후 결과를 반환합니다.
+    """
+    return {"status": "success"}
 
 
 @server.route('/api_valid_check', methods=['POST'])
