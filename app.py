@@ -115,7 +115,7 @@ def api_valid_check():
                 raise ConfInsufficientError()
 
             data = {"msg": "check message"}
-            r = s.post(api_url+"/talk", data=data)
+            r = s.post(api_url+"/talk", json=data)
             talk_data = r.json()
             if talk_data == "":
                 raise TalkGetError()

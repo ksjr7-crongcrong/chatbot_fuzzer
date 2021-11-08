@@ -8,6 +8,7 @@ import requests as req
 class ChatBot:
     def __init__(self, API_URL):
         self.API_URL = API_URL
+        self.__interval = 0
         self.get_conf()
 
     def get_conf(self):
@@ -15,7 +16,7 @@ class ChatBot:
         conf endpoint로 부터 interval 값을 받아옴
         """
         r = req.get(self.API_URL+"/conf")
-        self.interval = r.json()['interval']
+        self.__interval = r.json()['interval']
 
     def talk(self, msg):
         """
@@ -24,6 +25,14 @@ class ChatBot:
         talk endpoint를 통해 chatbot에게 메시지를 보내고 답변을 받아옴
         """
         data = {'msg': msg}
-        r = req.post(self.API_URL+"/talk", data=data)
+        r = req.post(self.API_URL+"/talk", json=data)
         msg = r.json()['msg']
         return msg
+    
+    @property
+    def interval(self):
+        return self.__interval
+
+    @interval.setter
+    def interval(self, value):
+        self.__interval = value

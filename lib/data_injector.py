@@ -1,4 +1,5 @@
 from typing import List, Tuple
+from time import sleep
 
 class DataInjector:
     def __init__(self, target) -> None:
