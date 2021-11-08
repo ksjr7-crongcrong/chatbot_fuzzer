@@ -19,7 +19,8 @@ document.addEventListener('readystatechange', event => {
                         }
                     });
             }
-        })();
+            document.querySelector('div[id="goResultView"]').innerHTML = '<a href="/show_result" class="btn btn-primary btn-lg" role="button">결과 확인하기</a>';
+        })();   
     }
 });
 

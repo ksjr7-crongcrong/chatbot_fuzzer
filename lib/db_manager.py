@@ -3,6 +3,7 @@ sqlite manager
 """
 import sqlite3
 import os
+from typing import Any
 
 class DBManager:
     def __init__(self, db_path:str):
@@ -21,8 +22,16 @@ class DBManager:
             self.conn.commit()
     
     def __del__(self):
-        self.conn.close()
-        os.remove(self.db_path)
+        if self.conn:
+            self.conn.close()
+
+    def query(self, stmt) -> Any:
+        self.cursor.execute(stmt)
+        rows = self.cursor.fetchall()
+        result = [row[0] for row in rows]
+        if len(result) == 1:
+            return result[0]
+        return result
 
     @property
     def conn(self):

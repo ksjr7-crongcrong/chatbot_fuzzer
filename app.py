@@ -2,14 +2,20 @@ from flask import Flask
 from flask import session, request, render_template, redirect, url_for
 from functools import wraps
 from lib.chatbot import ChatBot
+from lib.controller import Controller
+from lib.data_injector import DataInjector
 from pytz import timezone
 from datetime import datetime
 import requests as req
+import uuid
+from lib.data_injector import DataInjector
 
 server = Flask(__name__)
 server.secret_key = "7e733a6a61b057024842ca1825409c51a2f80100"
 chatbot = None
-
+controller = Controller()
+controller.ready_db()
+resultQ = {}
 
 class ConfGetError(Exception):
     def __init__(self, msg="Config Endpoint does not give config"):
@@ -37,6 +43,7 @@ class ConfInsufficientError(Exception):
 
 @server.route('/', methods=['GET'])
 def main():
+    session['uid'] = str(uuid.uuid4())
     return render_template('index.html')
 
 
@@ -47,26 +54,48 @@ def auto_check():
     """
     api_url = request.form.get('api_url')
     check_list = request.form.getlist('category')
+    session['check_list'] = check_list
     check_str = "|".join(check_list)
     return render_template('auto_check.html', check_list=check_list, check_str=check_str)
+
 
 @server.route('/check/<category>', methods=['GET'])
 def check(category):
     """
     category에 해당하는 검사를 진행 후 결과를 반환합니다.
     """
-    return {"status": "success"}
+    result = controller.check(category)
+    if result['status'] == "success":
+        resultQ[session['uid']+category] = result
+    return {"status":result['status']}
 
+@server.route('/show_result', methods=['GET'])
+def show_result():
+    """
+    결과를 보여주는 페이지
+    """
+    if "check_list" not in session:
+        return {"total queryed":0, "result": "Non check executed"}
+    check_list = session['check_list']
+    total_len = controller.get_query_len_by_list(check_list)
+    full_result = {}
+    for category in check_list:
+        key = session['uid']+category
+        if key in resultQ:
+            result = resultQ[key]
+            del resultQ[key]
+            full_result[category] = result
+    return {"total queryed": total_len, "result": full_result}
 
 @server.route('/api_valid_check', methods=['POST'])
 def api_valid_check():
-    global chatbot
     """
     API 페이지의 유효성을 검사합니다.
     1. conf endpoint 결과 값 존재 여부 검사
     2. conf endpoint 결과 값 내에 interval 값 존재 여부 검사
     3. talk endpoint 결과 값 존재 여부 검사
     """
+    global chatbot
     params = request.get_json()
     if 'api_url' not in params:
         return {"status": "error", "msg": "API URL does not sent"}
@@ -91,6 +120,8 @@ def api_valid_check():
             if talk_data == "":
                 raise TalkGetError()
         chatbot = ChatBot(api_url)
+        data_injector = DataInjector(chatbot)
+        controller.data_injector = data_injector
         return {"status": "success", "msg": "API is valid"}
     except req.exceptions.Timeout:
         return {"status": "error", "msg": "Timeout"}

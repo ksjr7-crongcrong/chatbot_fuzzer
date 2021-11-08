@@ -126,3 +126,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# fuzz set db don't need to upload
+fuzz_set.db

@@ -25,5 +25,5 @@ class ChatBot:
         """
         data = {'msg': msg}
         r = req.post(self.API_URL+"/talk", data=data)
-        msg = r.json['msg']
+        msg = r.json()['msg']
         return msg
