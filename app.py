@@ -1,3 +1,9 @@
+"""
+:TO DO:
+
+모든 check가 완료되었는지를 알 수 있도록 루틴을 wrapper로 만들고 show_result 호출시마다 체크하도록 하기
+사유 : f5 누르면 다시 체크하라고 하는것도 아니고 그냥 데이터가 없는채로 나옴
+"""
 from flask import Flask
 from flask import session, request, render_template, redirect, url_for
 from functools import wraps
@@ -48,8 +54,8 @@ def main():
     return render_template('index.html')
 
 
-@server.route('/auto_check', methods=['POST'])
-def auto_check():
+@server.route('/show_progress', methods=['POST'])
+def show_progress():
     """
     시작 화면에서 넘겨받은 인자를 통해 검사를 진행합니다.
     """
@@ -57,7 +63,7 @@ def auto_check():
     check_list = request.form.getlist('category')
     session['check_list'] = check_list
     check_str = "|".join(check_list)
-    return render_template('auto_check.html', check_list=check_list, check_str=check_str)
+    return render_template('progress.html', check_list=check_list, check_str=check_str)
 
 
 @server.route('/check/<category>', methods=['GET'])
@@ -89,8 +95,8 @@ def show_result():
             del resultQ[key]
             full_result[category] = result
             detected_count[category] = count
-    high_level_count = reduce(lambda x, y: x + y, [detected_count[c] for c in privacy_level["high"] if c in detected_count]+[0,0])
-    medium_level_count = reduce(lambda x, y: x + y, [detected_count[c] for c in privacy_level["medium"] if c in detected_count]+[0,0])
+    high_level_count = sum(detected_count[key] for key in detected_count if key in privacy_level["high"])
+    medium_level_count = sum(detected_count[key] for key in detected_count if key in privacy_level["medium"])
     full_result_list = []
     for c in full_result:
         for row in full_result[c]:
@@ -104,9 +110,11 @@ def show_result():
         check_list = "|".join(check_list),
         value_list = "|".join([str(detected_count[c]) for c in check_list if c in detected_count]),
         level_count = f'{high_level_count}|{medium_level_count}',
-        top_result = top_result
+        top_result = top_result,
+        total_queryed = total_len,
+        total_detected = sum(detected_count.values()),
+        high_level_count = high_level_count
     )
-    # return {"total queryed": total_len, "result": full_result, "count": detected_count, "high": high_level_count, "medium": medium_level_count}
 
 @server.route('/api_valid_check', methods=['POST'])
 def api_valid_check():

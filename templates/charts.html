@@ -63,12 +63,12 @@
                 </li>
 
                 <!-- Divider -->
-                <hr class="sidebar-divider" />
+                <!-- <hr class="sidebar-divider" /> -->
 
                 <!-- Heading -->
-                <div class="sidebar-heading">
+                <!-- <div class="sidebar-heading">
                     설정
-                </div>
+                </div> -->
 
                 <!-- Nav Item - Pages Collapse Menu -->
                 <!-- <li class="nav-item">
@@ -98,7 +98,7 @@
                 </li> -->
 
                 <!-- Nav Item - Utilities Collapse Menu -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a
                         class="nav-link collapsed"
                         href="#"
@@ -124,18 +124,18 @@
                             <a class="collapse-item" href="utilities-other.html">Other</a>
                         </div>
                     </div>
-                </li>
+                </li> -->
 
                 <!-- Divider -->
-                <hr class="sidebar-divider" />
+                <!-- <hr class="sidebar-divider" /> -->
 
                 <!-- Heading -->
-                <div class="sidebar-heading">
+                <!-- <div class="sidebar-heading">
                     페이지
-                </div>
+                </div> -->
 
                 <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a
                         class="nav-link collapsed"
                         href="#"
@@ -164,7 +164,7 @@
                             <a class="collapse-item" href="blank.html">Blank Page</a>
                         </div>
                     </div>
-                </li>
+                </li> -->
 
                 <!-- Nav Item - Charts -->
                 <!-- <li class="nav-item active">
@@ -201,12 +201,12 @@
                         class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
                     >
                         <!-- Sidebar Toggle (Topbar) -->
-                        <button
+                        <!-- <button
                             id="sidebarToggleTop"
                             class="btn btn-link d-md-none rounded-circle mr-3"
                         >
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </button> -->
 
                         <!-- Topbar Search -->
                         <!-- <form
@@ -503,9 +503,9 @@
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800">분석 결과</h1>
                         <p class="mb-4">
-                            취약점 분석 도구에 의하여 분석된 결과를 그래프로 보여줍니다.
+                            취약점 분석 도구에 의해 분석된 결과를 그래프로 보여줍니다.
                             <a target="_blank" href="/"
-                                >(다른 봇 분석하기)</a
+                                >(다시 분석하기)</a
                             >.
                         </p>
 
@@ -530,15 +530,13 @@
                                 <!-- Bar Chart -->
                                 <div class="card shadow mb-4">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">유형별 개수수</h6>
                                     </div>
                                     <div class="card-body">
                                         <div class="chart-bar">
                                             <canvas id="myBarChart"></canvas>
                                         </div>
                                         <hr />
-                                        Styling for the bar chart can be found in the
-                                        <code>/js/demo/chart-bar-demo.js</code> file.
                                     </div>
                                 </div>
                             </div>
@@ -549,18 +547,25 @@
                                     <!-- Card Header - Dropdown -->
                                     <div class="card-header py-3">
                                         <h6 class="m-0 font-weight-bold text-primary">
-                                            Donut Chart
+                                            분석 요약
                                         </h6>
                                     </div>
                                     <!-- Card Body -->
-                                    <div class="card-body">
-                                        <div class="chart-pie pt-4">
-                                            <canvas id="myPieChart"></canvas>
-                                        </div>
-                                        <hr />
-                                        Styling for the donut chart can be found in the
-                                        <code>/js/demo/chart-pie-demo.js</code> file.
+                                    <div class="card-body" style = "padding: 3.9% 5% 3.9% 5%">
+                                        <div>
+                                            <p class="display-4">
+                                                전체: {{ total_queryed }}
+                                            </p>
+                                            <hr>
+                                            <p class="display-2 text-warning">
+                                                발견: {{ total_detected }}
+                                            </p>
+                                            <hr>
+                                            <p class="display-4 text-danger">
+                                                위험: {{ high_level_count }}
+                                            </p>
                                     </div>
+                                    <hr/>
                                 </div>
                             </div>
                         </div>
@@ -568,7 +573,7 @@
                     <!-- /.container-fluid -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">분석결과 TOP5</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -576,36 +581,6 @@
                                     id="dataTable_wrapper"
                                     class="dataTables_wrapper dt-bootstrap4"
                                 >
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="dataTables_length" id="dataTable_length">
-                                                <label
-                                                    >Show
-                                                    <select
-                                                        name="dataTable_length"
-                                                        aria-controls="dataTable"
-                                                        class="custom-select custom-select-sm form-control form-control-sm"
-                                                        ><option value="10">10</option
-                                                        ><option value="25">25</option
-                                                        ><option value="50">50</option
-                                                        ><option value="100">100</option></select
-                                                    >
-                                                    entries</label
-                                                >
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6">
-                                            <div id="dataTable_filter" class="dataTables_filter">
-                                                <label
-                                                    >Search:<input
-                                                        type="search"
-                                                        class="form-control form-control-sm"
-                                                        placeholder=""
-                                                        aria-controls="dataTable"
-                                                /></label>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <table
@@ -687,113 +662,6 @@
                                                     {% endfor %}
                                                 </tbody>
                                             </table>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-5">
-                                            <div
-                                                class="dataTables_info"
-                                                id="dataTable_info"
-                                                role="status"
-                                                aria-live="polite"
-                                            >
-                                                Showing 1 to 10 of 57 entries
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-7">
-                                            <div
-                                                class="dataTables_paginate paging_simple_numbers"
-                                                id="dataTable_paginate"
-                                            >
-                                                <ul class="pagination">
-                                                    <li
-                                                        class="paginate_button page-item previous disabled"
-                                                        id="dataTable_previous"
-                                                    >
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="0"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >Previous</a
-                                                        >
-                                                    </li>
-                                                    <li class="paginate_button page-item active">
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="1"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >1</a
-                                                        >
-                                                    </li>
-                                                    <li class="paginate_button page-item">
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="2"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >2</a
-                                                        >
-                                                    </li>
-                                                    <li class="paginate_button page-item">
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="3"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >3</a
-                                                        >
-                                                    </li>
-                                                    <li class="paginate_button page-item">
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="4"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >4</a
-                                                        >
-                                                    </li>
-                                                    <li class="paginate_button page-item">
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="5"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >5</a
-                                                        >
-                                                    </li>
-                                                    <li class="paginate_button page-item">
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="6"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >6</a
-                                                        >
-                                                    </li>
-                                                    <li
-                                                        class="paginate_button page-item next"
-                                                        id="dataTable_next"
-                                                    >
-                                                        <a
-                                                            href="#"
-                                                            aria-controls="dataTable"
-                                                            data-dt-idx="7"
-                                                            tabindex="0"
-                                                            class="page-link"
-                                                            >Next</a
-                                                        >
-                                                    </li>
-                                                </ul>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

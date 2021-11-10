@@ -73,14 +73,14 @@
                 <hr class="sidebar-divider" />
 
                 <!-- Heading -->
-                <div class="sidebar-heading">
+                <!-- <div class="sidebar-heading">
                     설정
-                </div>
+                </div> -->
 
 
 
                 <!-- Nav Item - Utilities Collapse Menu -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a
                         class="nav-link collapsed"
                         href="#"
@@ -106,18 +106,18 @@
                             <a class="collapse-item" href="utilities-other.html">Other</a>
                         </div>
                     </div>
-                </li>
+                </li> -->
 
                 <!-- Divider -->
-                <hr class="sidebar-divider" />
+                <!-- <hr class="sidebar-divider" /> -->
 
                 <!-- Heading -->
-                <div class="sidebar-heading">
+                <!-- <div class="sidebar-heading">
                     페이지
-                </div>
+                </div> -->
 
                 <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a
                         class="nav-link collapsed"
                         href="#"
@@ -146,7 +146,7 @@
                             <a class="collapse-item" href="blank.html">Blank Page</a>
                         </div>
                     </div>
-                </li>
+                </li> -->
 
                 
 
@@ -169,12 +169,12 @@
                         class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
                     >
                         <!-- Sidebar Toggle (Topbar) -->
-                        <button
+                        <!-- <button
                             id="sidebarToggleTop"
                             class="btn btn-link d-md-none rounded-circle mr-3"
                         >
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </button> -->
 
                         
 
@@ -233,7 +233,7 @@
                                     <div class="card-body">
                                         <!-- 파일 업로드 -->
                                         
-                                        <form method="post" action="{{ url_for('auto_check') }}" onsubmit="return requireCheck();">
+                                        <form method="post" action="{{ url_for('show_progress') }}" onsubmit="return requireCheck();">
                                             <div class="input-group mb-3">
                                                 <input type="text" class="form-control" placeholder="API 주소" name="api_url">
                                                 <button class="btn btn-outline-secondary" type="button" onclick="apiValidCheck()">확인</button>
