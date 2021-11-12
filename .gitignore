@@ -129,3 +129,6 @@ dmypy.json
 
 # fuzz set db don't need to upload
 fuzz_set.db
+
+# temp files
+temp/
