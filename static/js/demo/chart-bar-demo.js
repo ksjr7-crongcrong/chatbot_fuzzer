@@ -41,9 +41,13 @@ category_eng2kor = {
   "drive": "운전면허번호",
   "passport": "여권번호"
 }
-let check_list = document.getElementById("check_list").value.split("|");
+let result = JSON.parse(document.getElementById("result_json").value);
+let check_list = result.checked_category;
 let check_list_kor = check_list.map(x => category_eng2kor[x]);
-let value_list = document.getElementById("value_list").value.split("|");
+let value_list = Object.keys(result.category_detected_cnt).map(function(key){
+  return result.category_detected_cnt[key];
+});
+
 var myBarChart = new Chart(ctx, {
   type: 'bar',
   data: {

@@ -5,8 +5,9 @@ import sqlite3
 import os
 from typing import Any
 
+
 class DBManager:
-    def __init__(self, db_path:str):
+    def __init__(self, db_path: str):
         newly_created = not os.path.isfile(db_path)
         self._conn = sqlite3.connect(db_path, check_same_thread=False)
         self._cursor = self.conn.cursor()
@@ -16,11 +17,12 @@ class DBManager:
                 CREATE TABLE IF NOT EXISTS "questions" (
                     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
                     "category" TEXT NOT NULL,
-                    "msg" TEXT NOT NULL UNIQUE
+                    "msg" TEXT NOT NULL UNIQUE,
+                    "stype" INT NOT NULL
                 );
             """)
             self.conn.commit()
-    
+
     def __del__(self):
         if self.conn:
             self.conn.close()
@@ -37,7 +39,7 @@ class DBManager:
     def conn(self):
         """ db connection getter """
         return self._conn
-        
+
     @property
     def cursor(self):
         """ db cursor getter """

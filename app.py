@@ -26,8 +26,29 @@ controller.ready_db()
 resultQ = {}
 
 
+def fuzzed_check(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if 'fuzzed' not in session:
+            return redirect(url_for('main'))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+def param_check(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if 'check_list' not in session:
+            return redirect(url_for('main'))
+        return f(*args, **kwargs)
+    return wrapper
+
+
 @server.route('/', methods=['GET'])
 def main():
+    session['use_subject'] = False
+    session['use_descriptive'] = False
+    session['check_list'] = []
     session['uid'] = str(uuid.uuid4())
     return render_template('index.html')
 
@@ -39,60 +60,70 @@ def show_progress():
     """
     api_url = request.form.get('api_url')
     check_list = request.form.getlist('category')
+
+    session['use_subject'] = True if "subject" in check_list else False
+    session['use_descriptive'] = True if "descriptive" in check_list else False
+
+    # subject, descriptive don't need check_list but they will be use separately
+    if "subject" in check_list:
+        check_list.remove("subject")
+    if "descriptive" in check_list:
+        check_list.remove("descriptive")
     session['check_list'] = check_list
     check_str = "|".join(check_list)
     return render_template('progress.html', check_list=check_list, check_str=check_str)
 
 
 @server.route('/check/<category>', methods=['GET'])
+@param_check
 def check(category):
     """
     category에 해당하는 검사를 진행 후 결과를 반환합니다.
     """
-    result = controller.check(category)
+    result = controller.check(
+        category, session['use_subject'], session['use_descriptive'])
     if result['status'] == "success":
         resultQ[session['uid']+category] = result['result']
-    return {"status":result['status']}
+    return {"status": result['status']}
+
+
+@server.route('/fuzz_done', methods=['GET'])
+@param_check
+def fuzz_done():
+    """
+    fuzzing이 완료되었을 때 호출되는 함수입니다.
+    """
+    session['fuzzed'] = True
+    return redirect(url_for('show_result'))
+
 
 @server.route('/show_result', methods=['GET'])
+@param_check
+@fuzzed_check
 def show_result():
     """
     결과를 보여주는 페이지
     """
-    privacy_level = {"high":["rrn", "passport", "drive", "bank", "credit", "health"], "medium":["addr", "phone", "number", "email"], "low":[]}
-    if "check_list" not in session:
-        return {"total queryed":0, "result": "Non check executed"}
+    key = session['uid']
     check_list = session['check_list']
-    total_len = controller.get_query_len_by_list(check_list)
-    full_result = {}
-    detected_count = {}
-    for category in check_list:
-        key = session['uid']+category
-        if key in resultQ:
-            count, result = resultQ[key]
-            del resultQ[key]
-            full_result[category] = result
-            detected_count[category] = count
-    high_level_count = sum(detected_count[key] for key in detected_count if key in privacy_level["high"])
-    medium_level_count = sum(detected_count[key] for key in detected_count if key in privacy_level["medium"])
-    full_result_list = []
-    for c in full_result:
-        for row in full_result[c]:
-            q, a = row
-            level = "주의"
-            if c in privacy_level["high"]:
-                level = "위험"
-            full_result_list.append({"category":c, "q":q, "a":a, "level":level})
-    top_result = full_result_list[:5]
+    full_result = {c: resultQ[key+c] for c in check_list}
+    for c in check_list:
+        del resultQ[key+c]
+    result_data = controller.parse_result(
+        session['check_list'], full_result, session['use_subject'], session['use_descriptive'])
+    result = result_data['json']
+    top_result = result_data['top']
+    total_queryed = result_data['total_queryed']
+    total_detected = result_data['total_detected']
+    high_cnt = result_data['high_cnt']
     return render_template('charts.html',
-        check_list = "|".join(check_list),
-        value_list = "|".join([str(detected_count[c]) for c in check_list if c in detected_count]),
-        level_count = f'{high_level_count}|{medium_level_count}',
-        top_result = top_result,
-        total_queryed = total_len,
-        total_detected = sum(detected_count.values()),
-        high_level_count = high_level_count
-    )
+                           result=result,
+                           top_result=top_result,
+                           total_queryed=total_queryed,
+                           total_detected=total_detected,
+                           high_level_count=high_cnt,
+                           )
+
 
 @server.route('/api_valid_check', methods=['POST'])
 def api_valid_check():
@@ -144,6 +175,11 @@ def api_valid_check():
         return {"status": "error", "msg": TalkGetError}
     except Exception as e:
         return {"status": "error", "msg": "Unknown Error"}
+
+
+@server.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html')
 
 
 @server.route('/flag', methods=['GET'])
