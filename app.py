@@ -10,6 +10,7 @@ from functools import wraps
 from lib.chatbot import ChatBot
 from lib.controller import Controller
 from lib.data_injector import DataInjector
+from lib.exception import *
 from pytz import timezone
 from datetime import datetime
 import requests as req
@@ -23,29 +24,6 @@ chatbot = None
 controller = Controller()
 controller.ready_db()
 resultQ = {}
-
-class ConfGetError(Exception):
-    def __init__(self, msg="Config Endpoint does not give config"):
-        self.msg = msg
-
-    def __str__(self):
-        return self.msg
-
-
-class TalkGetError(Exception):
-    def __init__(self, msg="Talk Endpoint does not give reply"):
-        self.msg = msg
-
-    def __str__(self):
-        return self.msg
-
-
-class ConfInsufficientError(Exception):
-    def __init__(self, msg="Config Endpoint does omitted some config"):
-        self.msg = msg
-
-    def __str__(self):
-        return self.msg
 
 
 @server.route('/', methods=['GET'])

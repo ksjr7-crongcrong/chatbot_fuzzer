@@ -91,7 +91,7 @@ def get_all_category() -> list:
 
 def match(category, text) -> bool:
     return re.match(regexp[category], text)
-    
+
 if __name__ == "__main__":
     print(get_regexp("bspattern"))
     print(get_all_category())

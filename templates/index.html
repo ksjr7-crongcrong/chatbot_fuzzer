@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
-        <meta name="author" content="" />
+        <meta name="author" content="Cha Hyeon-seok(tenderex), hyun9922" />
 
         <title>Crong - KSJR2021</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
@@ -42,7 +42,7 @@
                 <!-- Sidebar - Brand -->
                 <a
                     class="sidebar-brand d-flex align-items-center justify-content-center"
-                    href="index.html"
+                    href="/"
                 >
                     <div class="sidebar-brand-icon rotate-n-14">
                         <!-- <i class="fas fa-laugh-wink"></i> -->
@@ -206,10 +206,6 @@
                     <div class="container-fluid">
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800" style='text-align:center;'>챗봇 분석하기</h1>
-                        <p class="mb-4" style='text-align:center;'>
-                            업로드 하시오
-                           
-                        </p>
                         
                         
                         
@@ -226,7 +222,7 @@
                                     <!-- Card Header - Dropdown -->
                                     <div class="card-header py-3">
                                         <h6 class="m-0 font-weight-bold text-primary" style='text-align:center;'>
-                                            Upload
+                                            상세 설정
                                         </h6>
                                     </div>
                                     <!-- Card Body -->
@@ -239,11 +235,8 @@
                                                 <button class="btn btn-outline-secondary" type="button" onclick="apiValidCheck()">확인</button>
                                             </div>
                                                                                         <hr />
-                                        <p style='text-align:center;'>
-                                            <input type ="submit" name='submit' class="btn btn-primary" value="검사"/>
-                                                </p>
                                                 
-                                                                                                                     
+                                            <h2> 카테고리 설정 </h2>                                                                         
                                                 
                                            <div class="form-check">
                                               <input class="form-check-input" name=category type="checkbox" value="phone" id="flexCheckChecked" checked>
@@ -299,6 +292,25 @@
                                                 여권번호
                                               </label>
                                             </div>
+                                            <hr/>
+                                            <h2>
+                                                질문 설정
+                                            </h2>
+                                            <div class="form-check">
+                                              <input class="form-check-input" name=category type="checkbox" value="subject" id="flexCheckChecked" checked>
+                                              <label class="form-check-label" for="flexCheckChecked">
+                                                주어 포함
+                                              </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name=category type="checkbox" value="descriptive" id="flexCheckChecked" checked>
+                                                <label class="form-check-label" for="flexCheckChecked">
+                                                서술어 포함
+                                                </label>
+                                            </div>
+                                            <p style='text-align:center;'>
+                                                <input type ="submit" name='submit' class="btn btn-primary" value="검사"/>
+                                                    </p>
                                 
                                                 
                                                 
