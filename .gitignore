@@ -134,3 +134,6 @@ fuzz_set.db
 temp/
 templates/*.bak
 *.bak
+
+# reports
+result/

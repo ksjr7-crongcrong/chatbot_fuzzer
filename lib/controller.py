@@ -2,8 +2,8 @@ from lib.db_manager import DBManager
 from lib.fuzz_set_maker import FuzzSetCreator
 from lib.analyzer import Analyzer
 from typing import List, Dict
-import json
-
+import json, os
+from lib.report_maker import make_report
 
 class Controller:
     def __init__(self):
@@ -105,13 +105,20 @@ class Controller:
                 full_result_list.append(
                     {"category": c, "q": q, "a": a, "level": level})
         top_result = full_result_list[:5]
-
+        result_data['full'] = full_result_list
         result_data['top'] = top_result
         result_data['total_queryed'] = total_len
         result_data['total_detected'] = sum(detected_count.values())
         result_data['json'] = json.dumps(result)
         result_data['high_cnt'] = result['level_count']['high']
         return result_data
+    
+    def save_result(self, result) -> str:
+        path = os.path.join(os.getcwd(), "result")
+        if os.path.exists(path) is False:
+            os.mkdir(path)
+        file_id = make_report(result, path)
+        return file_id
 
     def check(self, category: str, use_subject: bool = True, use_descriptive: bool = True):
         q_list = self.get_query_list(

@@ -5,7 +5,7 @@
 사유 : f5 누르면 다시 체크하라고 하는것도 아니고 그냥 데이터가 없는채로 나옴
 """
 from flask import Flask
-from flask import session, request, render_template, redirect, url_for
+from flask import session, request, render_template, redirect, url_for, send_file, abort
 from functools import wraps
 from lib.chatbot import ChatBot
 from lib.controller import Controller
@@ -14,9 +14,10 @@ from lib.exception import *
 from pytz import timezone
 from datetime import datetime
 import requests as req
-import uuid
+import uuid, os
 from lib.data_injector import DataInjector
 from functools import reduce
+import hashlib
 
 server = Flask(__name__)
 server.secret_key = "7e733a6a61b057024842ca1825409c51a2f80100"
@@ -24,7 +25,12 @@ chatbot = None
 controller = Controller()
 controller.ready_db()
 resultQ = {}
+filenameQ = {}
 
+def make_download_url(fid: int):
+    fid_hash = hashlib.sha512("abcd".encode('utf-8')).hexdigest()
+    filenameQ[fid_hash] = fid
+    return url_for("download_file", fid=fid_hash)
 
 def fuzzed_check(f):
     @wraps(f)
@@ -130,12 +136,15 @@ def show_result():
     total_queryed = result_data['total_queryed']
     total_detected = result_data['total_detected']
     high_cnt = result_data['high_cnt']
+    file_id = controller.save_result(result_data['full'])
+    session['result_fid'] = file_id
     return render_template('charts.html',
                            result=result,
                            top_result=top_result,
                            total_queryed=total_queryed,
                            total_detected=total_detected,
                            high_level_count=high_cnt,
+                           report_download_url = make_download_url(session['result_fid'])
                            )
 
 
@@ -190,6 +199,20 @@ def api_valid_check():
     except Exception as e:
         return {"status": "error", "msg": "Unknown Error"}
 
+@server.route("/download_file/<fid>")
+@param_check
+@fuzzed_check
+def download_file(fid):
+    """
+    파일을 다운로드 합니다.
+    """
+    path = os.path.join(os.getcwd(), "result")
+    if fid not in filenameQ:
+        abort(404)
+    real_fid = filenameQ[fid]
+    fname = real_fid+".xlsx"
+    fpath = os.path.join(path, fname)
+    return send_file(fpath, as_attachment=True)
 
 @server.errorhandler(404)
 def page_not_found(error):
