@@ -17,7 +17,7 @@ def make_report(data: List[Dict[str, Any]], report_path:str) -> str:
 
     df = pd.DataFrame.from_dict(data)
     df.rename(columns = key_eng2kor, inplace=True)
-    df.reset_index(drop=True, inplace=True)
+
     if not report_path[:-1] == "/":
         report_path += "/"
     
