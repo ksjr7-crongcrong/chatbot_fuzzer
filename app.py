@@ -58,8 +58,21 @@ def show_progress():
     """
     시작 화면에서 넘겨받은 인자를 통해 검사를 진행합니다.
     """
+    category_eng2kor = {
+        "rrn": "주민등록번호",
+        "phone": "휴대전화번호",
+        "number": "집전화번호",
+        "bank": "계좌번호",
+        "credit": "신용카드번호",
+        "health": "건강보험번호",
+        "email": "이메일 주소",
+        "addr": "주소",
+        "drive": "운전면허번호",
+        "passport": "여권번호"
+    }
     api_url = request.form.get('api_url')
     check_list = request.form.getlist('category')
+    
 
     session['use_subject'] = True if "subject" in check_list else False
     session['use_descriptive'] = True if "descriptive" in check_list else False
@@ -71,6 +84,7 @@ def show_progress():
         check_list.remove("descriptive")
     session['check_list'] = check_list
     check_str = "|".join(check_list)
+    check_list = [(category_eng2kor[c],c) for c in check_list]
     return render_template('progress.html', check_list=check_list, check_str=check_str)
 
 

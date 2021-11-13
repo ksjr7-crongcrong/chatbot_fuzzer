@@ -132,3 +132,5 @@ fuzz_set.db
 
 # temp files
 temp/
+templates/*.bak
+*.bak
