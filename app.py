@@ -126,9 +126,10 @@ def show_result():
     """
     key = session['uid']
     check_list = session['check_list']
-    full_result = {c: resultQ[key+c] for c in check_list}
+    full_result = {c: resultQ[key+c] for c in check_list if key+c in resultQ}
     for c in check_list:
-        del resultQ[key+c]
+        if key+c in resultQ:
+            del resultQ[key+c]
     result_data = controller.parse_result(
         session['check_list'], full_result, session['use_subject'], session['use_descriptive'])
     result = result_data['json']
