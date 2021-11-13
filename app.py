@@ -28,8 +28,8 @@ resultQ = {}
 filenameQ = {}
 
 def make_download_url(fid: int):
-    fid_hash = hashlib.sha512("abcd".encode('utf-8')).hexdigest()
-    filenameQ[fid_hash] = fid
+    fid_hash = hashlib.sha512(str(fid).encode('utf-8')).hexdigest()
+    filenameQ[fid_hash] = str(fid)
     return url_for("download_file", fid=fid_hash)
 
 def fuzzed_check(f):
