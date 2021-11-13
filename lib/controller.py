@@ -67,6 +67,11 @@ class Controller:
             "medium": ["계좌번호", "신용카드번호"],
             "low": ["건강보험번호", "주소", "휴대전화번호", "집전화번호", "이메일 주소"]
         }
+        privacy_level_eng = {
+            "high": ["rrn", "passport", "drive"],
+            "medium": ["bank", "credit"],
+            "low": ["health", "addr", "phone", "number", "email"]
+        }
         result = {
             'level_count': {'high': 0, 'medium': 0, 'low': 0},
             'checked_category': [],
@@ -83,11 +88,11 @@ class Controller:
             detected_count[category] = count
         result['category_detected_cnt'] = detected_count
         result['level_count']['high'] = sum(
-            detected_count[key] for key in detected_count if key in privacy_level["high"])
+            detected_count[key] for key in detected_count if key in privacy_level_eng["high"])
         result['level_count']['medium'] = sum(
-            detected_count[key] for key in detected_count if key in privacy_level["medium"])
+            detected_count[key] for key in detected_count if key in privacy_level_eng["medium"])
         result['level_count']['low'] = sum(
-            detected_count[key] for key in detected_count if key in privacy_level["low"])
+            detected_count[key] for key in detected_count if key in privacy_level_eng["low"])
         full_result_list = []
         for c in full_result:
             for row in full_result[c]:
