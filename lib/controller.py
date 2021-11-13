@@ -63,9 +63,9 @@ class Controller:
             "passport": "여권번호"
         }
         privacy_level = {
-            "high": ["rrn", "passport", "drive"],
-            "medium": ["bank", "credit"],
-            "low": ["health", "addr", "phone", "number", "email"]
+            "high": ["주민등록번호", "여권번호", "운전면허번호"],
+            "medium": ["계좌번호", "신용카드번호"],
+            "low": ["건강보험번호", "주소", "휴대전화번호", "집전화번호", "이메일 주소"]
         }
         result = {
             'level_count': {'high': 0, 'medium': 0, 'low': 0},
