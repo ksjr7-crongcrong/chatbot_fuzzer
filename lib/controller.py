@@ -93,8 +93,10 @@ class Controller:
             for row in full_result[c]:
                 q, a = row
                 level = "주의"
-                if c in privacy_level["high"]:
+                if c in privacy_level["medium"]:
                     level = "위험"
+                elif c in privacy_level["high"]:
+                    level = "심각"
                 full_result_list.append(
                     {"category": c, "q": q, "a": a, "level": level})
         top_result = full_result_list[:5]
