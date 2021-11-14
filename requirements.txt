@@ -3,5 +3,6 @@ gunicorn
 flask
 pytz
 gevent
+xlsxwriter
 openpyxl
 pandas
